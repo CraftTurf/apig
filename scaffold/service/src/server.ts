@@ -2,7 +2,7 @@ import hapiAuthJwt2 from 'hapi-auth-jwt2';
 import { server, mongooseConnect, CrudApiArgs, CrudServer } from '@ctt/crud-api';
 import { permit } from '@ctt/service-utils';
 import redisPlugin from '@ctt/redis-client';
-import '../env';
+import './env';
 
 import conf from './config';
 import mongooseSchema from './persistence/mongoose/queries';
@@ -89,10 +89,11 @@ export default (): Promise<CrudServer> =>
     config: conf,
     configFiles,
     configOptions: {
-      dbConnectOptions: { useNewUrlParser: true, useFindAndModify: false },
+      dbConnectOptions: { useNewUrlParser: true },
     },
     routes,
     services,
+    serverOptions: {},
     plugins: [
       { plugin: hapiAuthJwt2, options: {} },
       {
@@ -119,15 +120,6 @@ export default (): Promise<CrudServer> =>
         title: '{{{scaffold_project_name}}}',
         description: '{{{scaffold_project_description}}}',
         version: '0.0.1',
-      },
-    },
-    swaggerUiOptions: {
-      title: '{{{scaffold_project_name}}}',
-      path: '/docs',
-      authorization: false,
-      auth: false,
-      swaggerOptions: {
-        validatorUrl: null,
       },
     },
     loggerOptions: {

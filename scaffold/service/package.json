@@ -32,6 +32,7 @@
     "lib"
   ],
   "devDependencies": {
+    "@babel/runtime": "7.17.0",
     "@types/convict": "4.2.1",
     "@types/hapi__hapi": "20.0.10",
     "@types/jest": "25.2.2",
