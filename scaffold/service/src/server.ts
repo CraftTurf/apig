@@ -1,7 +1,8 @@
 import hapiAuthJwt2 from 'hapi-auth-jwt2';
-import { server, mongooseConnect, CrudApiArgs } from '@ctt/crud-api';
+import { server, mongooseConnect, CrudApiArgs, CrudServer } from '@ctt/crud-api';
 import { permit } from '@ctt/service-utils';
 import redisPlugin from '@ctt/redis-client';
+import '../env';
 
 import conf from './config';
 import mongooseSchema from './persistence/mongoose/queries';
@@ -9,13 +10,11 @@ import routes from './routes';
 import services from './services';
 
 import config, { configFiles } from './utils/loadconfig';
-import { Server } from 'hapi';
 
 config.loadFile(configFiles);
 
-import '../env';
 
-interface {{{scaffold_server_name}}}Server extends Server {
+interface {{{scaffold_server_name}}}Server extends CrudServer {
   permissions: PermissionOnRedis;
 }
 
@@ -83,7 +82,7 @@ const validate = (application: {{{scaffold_server_name}}}Server) => async (
   });
 };
 
-export default (): Promise<Server> =>
+export default (): Promise<CrudServer> =>
   server({
     dbConnect: mongooseConnect,
     schema: mongooseSchema,

@@ -2,10 +2,10 @@ import { pickBy, path } from 'ramda';
 import { timezone, intl } from '@ctt/service-utils';
 
 import {{{scaffold_entity_capitalise}}}, { {{{scaffold_entity_capitalise}}}I } from './model';
-import { PaginateResult } from 'mongoose';
+import { LeanDocument, PaginateResult } from 'mongoose';
 import { QueryArgs, DbClient, Query } from '@ctt/crud-api';
 
-const create = async ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> => {
+const create = async ({ payload }: QueryArgs): Promise<LeanDocument<{{{scaffold_entity_capitalise}}}I>> => {
   const {{{scaffold_entity}}} = new {{{scaffold_entity_capitalise}}}({
     ...payload,
     meta: { ...payload.meta, ...{ created: timezone.parse(Date.now(), intl.tz.WAT) } },
@@ -14,7 +14,7 @@ const create = async ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capita
   return (await {{{scaffold_entity}}}.save()).toObject();
 };
 
-const findAll = async ({ payload }: QueryArgs): Promise<PaginateResult<{{{scaffold_entity_capitalise}}}I>> =>
+const findAll = async ({ payload }: QueryArgs): Promise<PaginateResult<LeanDocument<{{{scaffold_entity_capitalise}}}I>>> =>
   {{{scaffold_entity_capitalise}}}.paginate(
     {
       ...pickBy(val => !!val, {
@@ -58,10 +58,10 @@ const updateById = async ({ payload }: QueryArgs): Promise<object> =>
     },
   );
 
-export default (client: DbClient): Query<{{{scaffold_entity_capitalise}}}I> => ({
-  create: ({ payload, config }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> =>
+export default (client: DbClient): Query<{{{scaffold_entity_capitalise}}}I | LeanDocument<{{{scaffold_entity_capitalise}}}I>> => ({
+  create: ({ payload, config }: QueryArgs): Promise<LeanDocument<{{{scaffold_entity_capitalise}}}I>> =>
    create({ client, payload, config }),
-  findAll: ({ payload }: QueryArgs): Promise<PaginateResult<{{{scaffold_entity_capitalise}}}I>> =>
+  findAll: ({ payload }: QueryArgs): Promise<PaginateResult<LeanDocument<{{{scaffold_entity_capitalise}}}I>>> =>
    findAll({ payload, client }),
   findById: ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> =>
    findById({ payload, client }),
