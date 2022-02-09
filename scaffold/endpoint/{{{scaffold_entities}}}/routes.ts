@@ -4,7 +4,7 @@ import {
   validateObjectId,
   responseDocumentSchema,
 } from '../utils/schemas';
-import { ServerRoute, ResponseObject } from 'hapi';
+import { ServerRoute, ResponseObject, RouteOptions } from '@hapi/hapi';
 import { RouteArgs } from '@ctt/crud-api';
 import { ObjectSchema, Root } from 'joi';
 import tmplJson from './parsers/json';
@@ -57,8 +57,8 @@ export default ({ services, config, json, validate }: RouteArgs): ServerRoute =>
         .requiredKeys('name')
         .optionalKeys('meta'),
     },
-    tags: ['{{{scaffold_entities}}}'],
-  },
+    tags: ['api', '{{{scaffold_entities}}}'],
+  } as RouteOptions,
   handler: async (request, h): Promise<ResponseObject> => {
     request.log([`/${ROUTE_NAME}`]);
     let response;
@@ -115,9 +115,8 @@ export const find{{{scaffold_entity_capitalise}}} = ({ services, validate, json,
         {{{scaffold_entity_id}}}: validateObjectId(validate),
       },
     },
-
-    tags: ['{{{scaffold_entities}}}'],
-  },
+    tags: ['api', '{{{scaffold_entities}}}'],
+  } as RouteOptions,
   handler: async (request, h): Promise<ResponseObject> => {
     const payload = { id: request.params.{{{scaffold_entity_id}}} };
     request.log([`/${ROUTE_NAME}`]);
@@ -181,8 +180,8 @@ export const findAll{{{scaffold_entities_capitalized}}} = ({ services, validate,
       },
     },
 
-    tags: ['{{{scaffold_entities}}}'],
-  },
+    tags: ['api', '{{{scaffold_entities}}}'],
+  } as RouteOptions,
   handler: async (request, h): Promise<ResponseObject> => {
     const payload = {
       ...request.query,
@@ -237,8 +236,8 @@ export const remove{{{scaffold_entity_capitalise}}} = ({ services, validate, con
       },
     },
 
-    tags: ['{{{scaffold_entities}}}'],
-  },
+    tags: ['api', '{{{scaffold_entities}}}'],
+  } as RouteOptions,
   handler: async (request, h): Promise<ResponseObject> => {
     const payload = { id: request.params.{{{scaffold_entity_id}}} };
     request.log([`/${ROUTE_NAME}`]);
@@ -289,8 +288,8 @@ export const update{{{scaffold_entity_capitalise}}} = ({ services, validate, con
       payload: makeRequestPayloadSchema(validate),
     },
 
-    tags: ['{{{scaffold_entities}}}'],
-  },
+    tags: ['api', '{{{scaffold_entities}}}'],
+  } as RouteOptions,
   handler: async (request, h): Promise<ResponseObject> => {
     const payload = {
       ...(request.payload as object),
