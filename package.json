@@ -1,6 +1,6 @@
 {
   "name": "@ctt/apig",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "A crud-api microservice and endpoint generator",
   "main": "bin/apig",
   "bin": {
