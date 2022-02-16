@@ -1,5 +1,6 @@
 import tmplJson from './parsers/json';
 import { Dict, Crud, ServiceArgs } from '@ctt/crud-api';
+import { pickBy } from 'ramda';
 import { {{{scaffold_entity_capitalise}}}I } from '../persistence/mongoose/{{{scaffold_entity_capitalise}}}/model';
 import { PaginateResult } from 'mongoose';
 import { responseDocumentSchema, createPaginationLink } from '../utils/schemas';
@@ -28,7 +29,7 @@ const findAll = async ({ db, payload, config, json }: ServiceArgs): Promise<stri
   const {{{scaffold_entities}}} = (await db.{{{scaffold_entities}}}.findAll({ payload, config })) as PaginateResult<{{{scaffold_entity_capitalise}}}I>;
 
   if (!{{{scaffold_entities}}}) {
-    throw Error(`${{{{scaffold_entities}}}}`);
+    throw Error(`${ {{{scaffold_entities}}} }`);
   }
 
   if ({{{scaffold_entities}}}.docs.length < 1) {
@@ -81,35 +82,35 @@ const updateById = async ({ db, payload, config }: ServiceArgs): Promise<object>
 };
 
 export default (db: Dict): Crud<string> => ({
-  create: async ({ payload, config, json }: ServiceArgs): Promise<string> =>
+  create: ({ payload, config, json }: ServiceArgs): Promise<string> =>
     create({
       db,
       payload,
       config,
       json,
     }),
-  findById: async ({ payload, config, json }: ServiceArgs): Promise<string> =>
+  findById: ({ payload, config, json }: ServiceArgs): Promise<string> =>
     findById({
       db,
       payload,
       config,
       json,
     }),
-  findAll: async ({ payload, config, json }: ServiceArgs): Promise<any> => // eslint-disable-line
+  findAll: ({ payload, config, json }: ServiceArgs): Promise<any> => // eslint-disable-line
     findAll({
       db,
       payload,
       config,
       json,
     }),
-  removeById: async ({ payload, config, json }: ServiceArgs): Promise<void> =>
+  removeById: ({ payload, config, json }: ServiceArgs): Promise<void> =>
     removeById({
       db,
       payload,
       config,
       json,
     }),
-  updateById: async ({ payload, config, json }: ServiceArgs): Promise<object> =>
+  updateById: ({ payload, config, json }: ServiceArgs): Promise<object> =>
     updateById({
       db,
       payload,

@@ -42,6 +42,7 @@ export const generator = function ({ endpoint, endpoints, title, destination }) 
   const TEST = resolve(__dirname, '../../', 'scaffold/test');
   const DEST_DIR = destination;
   const TEST_PATH = resolve(DEST_DIR, '../test');
+  const capitalizedPlural = capitalize(endpoints);
 
   mustache.escape = v => v;
 
@@ -52,6 +53,9 @@ export const generator = function ({ endpoint, endpoints, title, destination }) 
         ...{
           scaffold_entities: endpoints,
           scaffold_entity: endpoint,
+          scaffold_entities_capitalized: capitalizedPlural,
+          scaffold_entity_id: `${endpoint}Id`,
+          scaffold_entity_route_id: `{${endpoint}Id}`,
           scaffold_entity_capitalise: title,
           scaffold_factory: title.toLowerCase(),
         },

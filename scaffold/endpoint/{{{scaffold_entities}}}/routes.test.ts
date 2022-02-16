@@ -4,10 +4,10 @@ const {
   routes: { validate },
 } = test;
 
-import create, { ROUTE_NAME, find{{{scaffold_entity_capitalise}}}, remove{{{scaffold_entity_capitalise}}}, update{{{scaffold_entity_capitalise}}}, findAll{{{scaffold_entity_capitalise}}}s } from './routes';
+import create, { ROUTE_NAME, find{{{scaffold_entity_capitalise}}}, remove{{{scaffold_entity_capitalise}}}, update{{{scaffold_entity_capitalise}}}, findAll{{{scaffold_entities_capitalized}}} } from './routes';
 
 describe(`Routes: ${ROUTE_NAME}`, () => {
-  const uid = '5c3cab69ffb5bd22494a8484';
+  const {{{scaffold_entity_id}}} = '5c3cab69ffb5bd22494a8484';
   const services = {
     {{{scaffold_entities}}}: {
       create: jest.fn().mockReturnValue('{{{scaffold_entity_capitalise}}} entry created'),
@@ -102,18 +102,18 @@ describe(`Routes: ${ROUTE_NAME}`, () => {
       mockContentType.mockImplementation(() => mockResponse);
       mockRequest = {
         log: jest.fn(),
-        params: jest.fn().mockReturnValue({ {{{scaffold_entity}}}Id: uid }),
+        params: jest.fn().mockReturnValue({ {{{scaffold_entity_id}}} }),
       };
     });
 
     it(`sets HTTP method GET on /${ROUTE_NAME} path`, () => {
       expect(router.method).toBe('GET');
-      expect(router.path).toBe(`/${ROUTE_NAME}/{{{{scaffold_entity}}}Id}`);
+      expect(router.path).toBe(`/${ROUTE_NAME}/{{{scaffold_entity_route_id}}}`);
     });
 
     it('sets validation on request params', () => {
       const { params } = router.options.validate;
-      expect(params.{{{scaffold_entity}}}Id).toBeDefined();
+      expect(params.{{{scaffold_entity_id}}}).toBeDefined();
     });
 
     it(`sets response HTTP status code to ${statusCode} on success`, async () => {
@@ -159,18 +159,18 @@ describe(`Routes: ${ROUTE_NAME}`, () => {
       mockStatusCode.mockImplementation(() => mockResponse);
       mockRequest = {
         log: jest.fn(),
-        params: jest.fn().mockReturnValue({ {{{scaffold_entity}}}Id: uid }),
+        params: jest.fn().mockReturnValue({ {{{scaffold_entity_id}}} }),
       };
     });
 
     it(`sets HTTP method DELETE on /${ROUTE_NAME} path`, () => {
       expect(router.method).toBe('DELETE');
-      expect(router.path).toBe(`/${ROUTE_NAME}/{{{{scaffold_entity}}}Id}`);
+      expect(router.path).toBe(`/${ROUTE_NAME}/{{{scaffold_entity_route_id}}}`);
     });
 
     it('sets validation on request params', () => {
       const { params } = router.options.validate;
-      expect(params.{{{scaffold_entity}}}Id).toBeDefined();
+      expect(params.{{{scaffold_entity_id}}}).toBeDefined();
     });
 
     it(`sets response HTTP status code to ${statusCode} on success`, async () => {
@@ -189,7 +189,7 @@ describe(`Routes: ${ROUTE_NAME}`, () => {
     });
   });
 
-  describe(`PATCH /${ROUTE_NAME}`, () => {
+  describe(`PUT /${ROUTE_NAME}`, () => {
     const router: any = update{{{scaffold_entity_capitalise}}}({ services, validate }); // eslint-disable-line @typescript-eslint/no-explicit-any
     const responseData = '{{{scaffold_entity_capitalise}}} entry modified';
     const statusCode = 200;
@@ -211,20 +211,20 @@ describe(`Routes: ${ROUTE_NAME}`, () => {
       mockStatusCode.mockImplementation(() => mockResponse);
       mockRequest = {
         log: jest.fn(),
-        params: jest.fn().mockReturnValue({ {{{scaffold_entity}}}Id: uid }),
+        params: jest.fn().mockReturnValue({ {{{scaffold_entity_id}}} }),
         payload: jest.fn().mockReturnValue({}),
       };
     });
 
-    it(`sets HTTP method PATCH on /${ROUTE_NAME} path`, () => {
-      expect(router.method).toBe('PATCH');
-      expect(router.path).toBe(`/${ROUTE_NAME}/{{{{scaffold_entity}}}Id}`);
+    it(`sets HTTP method PUT on /${ROUTE_NAME} path`, () => {
+      expect(router.method).toBe('PUT');
+      expect(router.path).toBe(`/${ROUTE_NAME}/{{{scaffold_entity_route_id}}}`);
     });
 
     it('sets validation on request payload and params', () => {
       const { payload } = router.options.validate;
       const { params } = router.options.validate;
-      expect(params.{{{scaffold_entity}}}Id).toBeDefined();
+      expect(params.{{{scaffold_entity_id}}}).toBeDefined();
       expect(payload).toBeDefined();
     });
 
@@ -245,7 +245,7 @@ describe(`Routes: ${ROUTE_NAME}`, () => {
   });
 
   describe('GET /{{{scaffold_entities}}}', () => {
-    const router: any = findAll{{{scaffold_entity_capitalise}}}s({ services, validate }); // eslint-disable-line @typescript-eslint/no-explicit-any
+    const router: any = findAll{{{scaffold_entities_capitalized}}}({ services, validate }); // eslint-disable-line @typescript-eslint/no-explicit-any
     const responseData = '{{{scaffold_entity_capitalise}}} entries fetched';
     const statusCode = 200;
     const contentType = 'application/json';

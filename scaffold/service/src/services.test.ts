@@ -1,9 +1,13 @@
-import routes from './services';
+import services from './services';
+import { emptyFn } from '../test/utils/mock';
+import { Dict } from '@ctt/crud-api';
 
 describe('./services', () => {
+  const db = emptyFn<Dict>();
+
   describe('.default', () => {
     it('should declare services', () => {
-      expect(routes()).toBeDefined();
+      expect(services(db)).toBeDefined();
     });
   });
 });

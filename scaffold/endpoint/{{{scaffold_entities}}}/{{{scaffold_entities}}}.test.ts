@@ -19,11 +19,11 @@ let app = null;
 const url =  `/${ROUTE_NAME}`;
 let headers = null;
 
-describe('Users', () => {
+describe('{{{scaffold_entities_capitalized}}}', () => {
   beforeAll(async () => {
     app = await application();
     await app.start();
-    headers = bearerToken(config);
+    headers = bearerToken({ config });
   });
 
   afterAll(async () => {

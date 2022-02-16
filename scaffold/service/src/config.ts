@@ -7,6 +7,13 @@ export default ({
       env: 'SERVICE_NAME',
       arg: 'service-name',
     },
+    project: {
+      doc: 'Parent project namespace',
+      format: String,
+      default: 'craftturf',
+      env: 'PROJECT_NAME',
+      arg: 'project-name',
+    },
   },
   redis: {
     mode: {

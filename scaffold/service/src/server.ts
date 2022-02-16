@@ -1,7 +1,8 @@
 import hapiAuthJwt2 from 'hapi-auth-jwt2';
-import { server, mongooseConnect, CrudApiArgs } from '@ctt/crud-api';
+import { server, mongooseConnect, CrudApiArgs, CrudServer } from '@ctt/crud-api';
 import { permit } from '@ctt/service-utils';
 import redisPlugin from '@ctt/redis-client';
+import './env';
 
 import conf from './config';
 import mongooseSchema from './persistence/mongoose/queries';
@@ -9,9 +10,11 @@ import routes from './routes';
 import services from './services';
 
 import config, { configFiles } from './utils/loadconfig';
-import { Server } from 'hapi';
 
-interface {{{scaffold_server_name}}}Server extends Server {
+config.loadFile(configFiles);
+
+
+interface {{{scaffold_server_name}}}Server extends CrudServer {
   permissions: PermissionOnRedis;
 }
 
@@ -34,8 +37,6 @@ interface DataSource {
   query: PermissionsQuery;
 }
 
-config.loadFile(configFiles);
-
 type datasource = (app: {{{scaffold_server_name}}}Server) => Promise<DataSource>;
 
 const datasource = async (application: {{{scaffold_server_name}}}Server): Promise<DataSource> => {
@@ -43,9 +44,9 @@ const datasource = async (application: {{{scaffold_server_name}}}Server): Promis
 
   return {
     query: async (role: string): Promise<ResourcePermission[]> => {
-      const permissions: PermissionOnRedis = application.permissions
-        ? application.permissions
-        : JSON.parse(await redis.get(`${config.get('service.name')}:Permissions`));
+      const permissions: PermissionOnRedis =
+        application.permissions ||
+        JSON.parse(await redis.get(`${config.get('service.project')}:${config.get('service.name')}:Permissions`));
 
       application.permissions = permissions;
 
@@ -81,17 +82,18 @@ const validate = (application: {{{scaffold_server_name}}}Server) => async (
   });
 };
 
-export default (): Promise<Server> =>
+export default (): Promise<CrudServer> =>
   server({
     dbConnect: mongooseConnect,
     schema: mongooseSchema,
     config: conf,
     configFiles,
     configOptions: {
-      dbConnectOptions: { useNewUrlParser: true, useFindAndModify: false },
+      dbConnectOptions: { useNewUrlParser: true },
     },
     routes,
     services,
+    serverOptions: {},
     plugins: [
       { plugin: hapiAuthJwt2, options: {} },
       {
@@ -118,15 +120,6 @@ export default (): Promise<Server> =>
         title: '{{{scaffold_project_name}}}',
         description: '{{{scaffold_project_description}}}',
         version: '0.0.1',
-      },
-    },
-    swaggerUiOptions: {
-      title: '{{{scaffold_project_name}}}',
-      path: '/docs',
-      authorization: false,
-      auth: false,
-      swaggerOptions: {
-        validatorUrl: null,
       },
     },
     loggerOptions: {

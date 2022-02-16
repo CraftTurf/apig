@@ -3,6 +3,6 @@
   "env": {
     "NODE_ENV": "development"
   },
-  "ext": "ts",
+  "ext": "ts,js,json",
   "exec": "ts-node -- src/index.ts"
 }

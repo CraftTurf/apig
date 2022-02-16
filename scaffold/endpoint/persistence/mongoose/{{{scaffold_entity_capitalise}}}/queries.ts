@@ -2,19 +2,19 @@ import { pickBy, path } from 'ramda';
 import { timezone, intl } from '@ctt/service-utils';
 
 import {{{scaffold_entity_capitalise}}}, { {{{scaffold_entity_capitalise}}}I } from './model';
-import { PaginateResult } from 'mongoose';
+import { LeanDocument, PaginateResult } from 'mongoose';
 import { QueryArgs, DbClient, Query } from '@ctt/crud-api';
 
-const create = async ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> => {
+const create = async ({ payload }: QueryArgs): Promise<LeanDocument<{{{scaffold_entity_capitalise}}}I>> => {
   const {{{scaffold_entity}}} = new {{{scaffold_entity_capitalise}}}({
     ...payload,
-    meta: { ...payload.meta, ...{ created: timezone.parse(Date.now(), intl.tz.LB) } },
+    meta: { ...payload.meta, ...{ created: timezone.parse(Date.now(), intl.tz.WAT) } },
   });
 
   return (await {{{scaffold_entity}}}.save()).toObject();
 };
 
-const findAll = async ({ payload }: QueryArgs): Promise<PaginateResult<{{{scaffold_entity_capitalise}}}I>> =>
+const findAll = async ({ payload }: QueryArgs): Promise<PaginateResult<LeanDocument<{{{scaffold_entity_capitalise}}}I>>> =>
   {{{scaffold_entity_capitalise}}}.paginate(
     {
       ...pickBy(val => !!val, {
@@ -23,12 +23,13 @@ const findAll = async ({ payload }: QueryArgs): Promise<PaginateResult<{{{scaffo
           $gte: path(['from'], payload),
           $lte: path(['to'], payload),
         },
+        'meta.active': true,
       }),
     },
     {
       page: payload.page,
       limit: payload.limit,
-      offset: payload.offset,
+      [payload.offset && 'offset']: payload.offset,
       lean: true,
       leanWithId: true,
       sort: { 'meta.created': 'desc', 'meta.updated': 'desc' },
@@ -36,38 +37,36 @@ const findAll = async ({ payload }: QueryArgs): Promise<PaginateResult<{{{scaffo
   );
 
 const findById = async ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> =>
-  {{{scaffold_entity_capitalise}}}.findById(payload.id).lean({ virtuals: true });
+  {{{scaffold_entity_capitalise}}}.findOne({ _id: payload.id, 'meta.active': true }).lean({ virtuals: true });
 
 const removeById = async ({ payload }: QueryArgs): Promise<object> =>
   {{{scaffold_entity_capitalise}}}.updateOne(
-    { _id: payload.id },
-    { $set: { 'meta.active': false, 'meta.updated': Date.now() } },
+    { _id: payload.id, 'meta.active': true },
+    { $set: { 'meta.active': false, 'meta.updated': timezone.parse(Date.now(), intl.tz.WAT) } },
   );
 
 const updateById = async ({ payload }: QueryArgs): Promise<object> =>
   {{{scaffold_entity_capitalise}}}.updateOne(
-    { _id: payload.id },
+    { _id: payload.id, 'meta.active': true },
     {
-      ...pickBy(val => !!val, {
-        ...payload,
-        ...{
-          $set: {
-            'meta.updated': Date.now(),
-          },
-        },
-      }),
+      $set: {
+        ...pickBy(val => !!val, {
+          ...payload,
+          'meta.updated': timezone.parse(Date.now(), intl.tz.WAT),
+        }),
+      },
     },
   );
 
-export default (client: DbClient): Query<{{{scaffold_entity_capitalise}}}I> => ({
-  create: async ({ payload, config }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> =>
-    await create({ client, payload, config }),
-  findAll: async ({ payload }: QueryArgs): Promise<PaginateResult<{{{scaffold_entity_capitalise}}}I>> =>
-    await findAll({ payload, client }),
-  findById: async ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> =>
-    await findById({ payload, client }),
-  removeById: async ({ payload }: QueryArgs): Promise<object> =>
-    await removeById({ payload, client }),
-  updateById: async ({ payload }: QueryArgs): Promise<object> =>
-    await updateById({ payload, client }),
+export default (client: DbClient): Query<{{{scaffold_entity_capitalise}}}I | LeanDocument<{{{scaffold_entity_capitalise}}}I>> => ({
+  create: ({ payload, config }: QueryArgs): Promise<LeanDocument<{{{scaffold_entity_capitalise}}}I>> =>
+   create({ client, payload, config }),
+  findAll: ({ payload }: QueryArgs): Promise<PaginateResult<LeanDocument<{{{scaffold_entity_capitalise}}}I>>> =>
+   findAll({ payload, client }),
+  findById: ({ payload }: QueryArgs): Promise<{{{scaffold_entity_capitalise}}}I> =>
+   findById({ payload, client }),
+  removeById: ({ payload }: QueryArgs): Promise<object> =>
+   removeById({ payload, client }),
+  updateById: ({ payload }: QueryArgs): Promise<object> =>
+   updateById({ payload, client }),
 });

@@ -40,11 +40,25 @@ export const errorResponseSchema = {
   },
 };
 
-const link = {
+const paginationLink = {
   type: 'object',
   properties: {
     href: {
       type: 'string',
+    },
+  },
+};
+
+const links = {
+  type: 'object',
+  properties: {
+    self: {
+      type: 'object',
+      properties: {
+        href: {
+          type: 'string',
+        },
+      },
     },
   },
 };
@@ -62,11 +76,11 @@ export const paginationResponseSchema = {
         type: 'integer',
         format: 'int32',
       },
-      first: link,
-      last: link,
-      next: link,
-      current: link,
-      previous: link,
+      first: paginationLink,
+      last: paginationLink,
+      next: paginationLink,
+      current: paginationLink,
+      previous: paginationLink,
     },
   },
 };
@@ -92,6 +106,7 @@ export const responseDocumentSchema = (template): object => ({
           id: {
             type: 'string',
           },
+          links,
           ...metaResponseSchema,
         },
       },
@@ -101,12 +116,13 @@ export const responseDocumentSchema = (template): object => ({
   },
 });
 
-export const validateObjectId = (validator: Root): StringSchema => validator.string().regex(/\b[0-9a-fA-F]{24}\b/);
+export const validateObjectId = (validator: Root): StringSchema =>
+  validator.string().regex(/\b[0-9a-fA-F]{24}\b/);
 
 export const createPaginationLink = (endpoint: string): Function => (
   page: number,
   limit?: number,
-  offset?: number
+  offset?: number,
 ): object => ({
   href: `/${endpoint}?page=${page}&limit=${limit}${offset ? `&offset=${offset}` : ''}`,
 });

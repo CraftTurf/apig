@@ -3,6 +3,7 @@ import { factory } from 'factory-girl';
 import '../../../../test/factories/{{{scaffold_factory}}}';
 import queries from './queries';
 import  { configFiles } from '../../../utils/loadconfig';
+import { verify{{{scaffold_entity_capitalise}}}, verifyResponse } from '../../../../test/helpers/{{{scaffold_entities}}}';
 
 import { mongooseConnect, dbConfig as config } from '@ctt/crud-api';
 

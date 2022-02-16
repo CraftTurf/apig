@@ -1,3 +1,7 @@
-import dotenv from 'dotenv';
+import dotEnvExtended from 'dotenv-extended';
 
-dotenv.config({ silent: true });
+export default dotEnvExtended.load({
+    errorOnRegex: true,
+    overrideProcessEnv: true,
+    errorOnExtra: true,
+});

@@ -32,6 +32,12 @@ export const questions = [
   },
   {
     type: 'input',
+    name: 'organisation',
+    message: () => 'Project organisation',
+    default: () => 'Craft Turf Ltd',
+  },
+  {
+    type: 'input',
     name: 'directory',
     message: 'Root directory folder name (eg orders, accounts-api, payments)',
   },
@@ -54,13 +60,24 @@ export const questions = [
   },
 ];
 
-export const generator = function ({ name, description, author, giturl, directory, mongodb, port, destination }) {
+export const generator = function ({
+  name,
+  description,
+  author,
+  giturl,
+  directory,
+  mongodb,
+  port,
+  destination,
+  organisation,
+}) {
   mkdirp(destination, err => {
     if (err) throw err;
   });
 
   const SCAFFOLD = path.resolve(__dirname, '../../', 'scaffold/service');
   const DEST_DIR = path.resolve(destination, directory);
+  const copyrightYear = new Date().getFullYear();
 
   const dockerPath = /\b([a-z0-9-]*(?<=\/)[/a-z0-9-]+)\b/.test(name)
     ? /\b([a-z0-9-]*(?<=\/)[/a-z0-9-]+)\b/.exec(name)[0]
@@ -78,7 +95,9 @@ export const generator = function ({ name, description, author, giturl, director
           scaffold_project_description: description,
           scaffold_project_author: author,
           scaffold_project_git_url: giturl,
+          scaffold_copyright_year: copyrightYear,
           scaffold_project_directory: directory,
+          scaffold_project_organisation: organisation,
           scaffold_mongodb_name: mongodb,
           scaffold_service_port: port,
         },

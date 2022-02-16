@@ -1,4 +1,3 @@
-import '../env';
 import { resolve } from 'path';
 import convict from 'convict';
 import { config as conf } from '@ctt/crud-api';
