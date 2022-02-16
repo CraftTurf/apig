@@ -34,7 +34,7 @@ export const questions = [
     type: 'input',
     name: 'organisation',
     message: () => 'Project organisation',
-    default: () => 'CraftTurf Ltd',
+    default: () => 'Craft Turf Ltd',
   },
   {
     type: 'input',
