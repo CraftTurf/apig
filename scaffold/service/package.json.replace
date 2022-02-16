@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@ctt/crud-api": "1.8.1",
-    "@ctt/redis-client": "0.0.1",
+    "@ctt/redis-client": "0.0.3",
     "@ctt/service-utils": "1.4.0",
     "convict": "4.3.2",
     "dotenv-extended": "2.9.0",

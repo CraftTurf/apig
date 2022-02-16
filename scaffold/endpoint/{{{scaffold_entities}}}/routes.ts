@@ -53,9 +53,7 @@ export default ({ services, config, json, validate }: RouteArgs): ServerRoute =>
           .type(JSON_TYPE)
           .takeover();
       },
-      payload: makeRequestPayloadSchema(validate)
-        .requiredKeys('name')
-        .optionalKeys('meta'),
+      payload: makeRequestPayloadSchema(validate),
     },
     tags: ['api', '{{{scaffold_entities}}}'],
   } as RouteOptions,
